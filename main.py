@@ -34,7 +34,7 @@ for i in range(artist_count):
 
     artist = artists[i]
 
-    print(f"\n\nDownloading {artist.title}, artist {i+1} of {artist_count}")
+    print(f"\nDownloading {artist.title}, artist {i+1} of {artist_count}")
     print("-"*5)
 
     # Create folder for artist
@@ -61,15 +61,15 @@ for i in range(artist_count):
 
 
 
-
     # Download all multi albums
     for multi_album in artist.multi_albums:
         if not os.path.exists(f"{artist.title}/{multi_album.title}"):
             os.makedirs(f"{artist.title}/{multi_album.title}")
 
-        track = 1
+        track = 0
 
         for file in multi_album.music_files:
+            track += 1
             file_title = f"{artist.title}/{multi_album.title}/{track} - {file.title}"
 
             if not replace_mode:
@@ -84,5 +84,3 @@ for i in range(artist_count):
                             artist=artist.title,
                             album=multi_album.title.replace(" - Album", ""),
                             track=track)
-            
-            track += 1
