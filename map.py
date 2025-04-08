@@ -29,7 +29,7 @@ def return_artists():
     artists.append(
         Artist(title="Sanguisugabogg",
             music_files=[
-                MusicFile(title="Tortured Whole", link="https://www.youtube.com/watch?v=yva43MGiM0w")
+                MusicFile(title="Tortured Whole - Album", link="https://www.youtube.com/watch?v=yva43MGiM0w")
             ],
             multi_albums=[
                 MultiAlbum(title="Homicidal Ecstacy - Album", 
@@ -55,7 +55,7 @@ def return_artists():
     artists.append(
         Artist(title="Satan's Revenge on Mankind",
             multi_albums=[
-                MultiAlbum(title="Goreblast",
+                MultiAlbum(title="Goreblast - Album",
                     music_files=[
                         MusicFile(title="Vaticandestruction", link="https://www.youtube.com/watch?v=vQmMFuAp54k"),
                         MusicFile(title="We Come To Eat You", link="https://www.youtube.com/watch?v=4bgctFIchjU"),

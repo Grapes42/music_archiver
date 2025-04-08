@@ -82,6 +82,7 @@ for i in range(artist_count):
             add_metadata(path=f"{file_title}.mp3",
                             title=file.title,
                             artist=artist.title,
-                            album=multi_album.title.replace(" - Album", ""))
+                            album=multi_album.title.replace(" - Album", ""),
+                            track=track)
             
             track += 1
