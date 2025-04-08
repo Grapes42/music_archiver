@@ -1,3 +1,7 @@
+import os
+import yt_dlp
+
+# Class Setup
 class MusicFile():
     def __init__(self, title, link, album=""):
         self.title = title
@@ -21,11 +25,27 @@ class Artist():
     def __str__(self):
         string = ""
         for file in self.music_files:
-            string += "Title: {}\n".format(file.title)
-            string += "Album: {}\n".format(file.album)
-            string += "Link: {}\n".format(file.link)
-
+            string += f"Title: {file.title}\n"
+            string += f"Album: {file.album}\n"
+            string += f"Link: {file.link}\n"
         return string
+    
+# yt dlp setup
+def download_from_youtube(title, link):
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+        'outtmpl': f'{title}.%(ext)s'
+    }
+
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([link])
+
+
 
 artists = []
 
@@ -44,5 +64,17 @@ artists.append(
            ])
 )
 
-for artist in artists:
-    print(artist)
+artist_count = len(artists)
+
+for i in range(artist_count):
+
+    artist = artists[i]
+
+    print(f"\n\nDownloading {artist.title}, artist {i+1} of {artist_count}")
+    print("-"*5)
+
+    if not os.path.exists(artist.title):
+        os.makedirs(artist.title)
+
+    for file in artist.music_files:
+        download_from_youtube(title=f"{artist.title}/{file.title}", link=file.link)
