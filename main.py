@@ -15,6 +15,13 @@ def add_metadata(path, title, artist, album, track=1):
     d3_file.tag.artist = artist
     d3_file.tag.album = album
     d3_file.tag.track_num = track
+    
+    try:
+        image_data = open(f"{artist}/{album}.jpg", "rb").read()
+        d3_file.tag.images.set(3, image_data, "image/jpeg", u"Album Cover")
+        print("Image for album found")
+    except:
+        print("No image for album found")
 
     d3_file.tag.save()
 

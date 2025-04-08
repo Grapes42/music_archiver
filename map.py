@@ -74,9 +74,17 @@ def return_artists():
         ])
     )
 
+    artists.append( Artist(title="Pantera",
+        music_files=[
+            MusicFile(title="Vulgar Display of Power - Album", link="https://www.youtube.com/watch?v=8hu6xDPcNlE"),
+            MusicFile(title="Cowboys From Hell - Album", link="https://www.youtube.com/watch?v=xolAPOWtYVE"),
+            MusicFile(title="Far Beyond Driven - Album", link="https://www.youtube.com/watch?v=rIdjLL13gdI")
+        ]))
+
     artists.append( Artist(title="Sanguisugabogg",
         music_files=[
-            MusicFile(title="Tortured Whole - Album", link="https://www.youtube.com/watch?v=yva43MGiM0w")
+            MusicFile(title="Tortured Whole - Album", link="https://www.youtube.com/watch?v=yva43MGiM0w"),
+            MusicFile(title="Dead As Shit", link="https://www.youtube.com/watch?v=AjTa3tmsHNQ")
         ],
         multi_albums=[
             MultiAlbum(title="Homicidal Ecstacy - Album", 
@@ -130,6 +138,12 @@ def return_artists():
             )
         ])
     )
+
+    artists.append( Artist(title="Slayer",
+        music_files=[
+            MusicFile(title="Reign In Blood - Album", link="https://www.youtube.com/watch?v=nlPHYNG6ZF4"),
+            MusicFile(title="Seasons In The Abyss - Album", link="https://www.youtube.com/watch?v=V_vM2nGkRkI")
+        ]))
 
     artists.append( Artist(title="The Dark Prison Massacre",
         multi_albums=[
