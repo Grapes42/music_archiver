@@ -1,2 +1,4 @@
-map.txt
-download.sh
+*
+
+!main.py
+!map.py
