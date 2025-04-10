@@ -54,12 +54,15 @@ for i in range(artist_count):
 
         # Skip download if not in replace 
         # mode and file already exists
+        can_download = True
+
         if not replace_mode:
             if os.path.isfile(f"{file_title}.mp3"):
                 print("File already exists, skipping.")
-                continue
+                can_download = False
 
-        download_from_youtube(title=file_title, link=file.link)
+        if can_download:
+            download_from_youtube(title=file_title, link=file.link)
 
         add_metadata(path=f"{file_title}.mp3", 
                         title=file.title,
@@ -79,12 +82,15 @@ for i in range(artist_count):
             track += 1
             file_title = f"{artist.title}/{multi_album.title}/{track} - {file.title}"
 
+            can_download = True
+
             if not replace_mode:
                 if os.path.isfile(f"{file_title}.mp3"):
                     print("File already exists, skipping.")
-                    continue
+                    can_download = False
 
-            download_from_youtube(title=file_title, link=file.link)
+            if can_download:
+                download_from_youtube(title=file_title, link=file.link)
 
             add_metadata(path=f"{file_title}.mp3",
                             title=file.title,

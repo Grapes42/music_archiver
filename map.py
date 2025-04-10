@@ -28,6 +28,12 @@ artists.append( Artist(title="ARTIST",
 def return_artists():
     artists = []
 
+    artists.append( Artist(title="Acid Bath",
+        music_files=[
+            MusicFile(title="When The Kite String Pops - Album", link="https://www.youtube.com/watch?v=Ia8M8NPsI7k")
+        ])
+    )
+
     artists.append( Artist(title="Butcher M.D.",
         music_files=[
             MusicFile(title="Traces of Gore - Album", link="https://www.youtube.com/watch?v=fSCv6MswW8E")
@@ -70,7 +76,7 @@ def return_artists():
         music_files=[
             MusicFile(title="Hymns Of Indigestible Suppuration - Album", link="https://www.youtube.com/watch?v=AniJyRDkUpc"),
             MusicFile(title="Putrefaction in Progress - Album", link="https://www.youtube.com/watch?v=olAcfzvlKT4"),
-            MusicFile(title="Horrific Compositions of Decomposition", link="https://www.youtube.com/watch?v=uX6uxflm78w")
+            MusicFile(title="Horrific Compositions of Decomposition - Album", link="https://www.youtube.com/watch?v=uX6uxflm78w")
         ])
     )
 
@@ -83,8 +89,7 @@ def return_artists():
 
     artists.append( Artist(title="Sanguisugabogg",
         music_files=[
-            MusicFile(title="Tortured Whole - Album", link="https://www.youtube.com/watch?v=yva43MGiM0w"),
-            MusicFile(title="Dead As Shit", link="https://www.youtube.com/watch?v=AjTa3tmsHNQ")
+            MusicFile(title="Tortured Whole - Album", link="https://www.youtube.com/watch?v=yva43MGiM0w")
         ],
         multi_albums=[
             MultiAlbum(title="Homicidal Ecstacy - Album", 
@@ -143,7 +148,23 @@ def return_artists():
         music_files=[
             MusicFile(title="Reign In Blood - Album", link="https://www.youtube.com/watch?v=nlPHYNG6ZF4"),
             MusicFile(title="Seasons In The Abyss - Album", link="https://www.youtube.com/watch?v=V_vM2nGkRkI")
-        ]))
+        ])
+    )
+    
+    artists.append( Artist(title="Sleep",
+        multi_albums=[
+            MultiAlbum(title="The Sciences - Album",
+                music_files=[
+                    MusicFile(title="The Sciences", link="https://www.youtube.com/watch?v=XUQyM98fq2U"),
+                    MusicFile(title="Marijuanaut's Theme", link="https://www.youtube.com/watch?v=AMUaWc46_0U"),
+                    MusicFile(title="Sonic Titan", link="https://www.youtube.com/watch?v=Uvyzq-iZCmI"),
+                    MusicFile(title="Giza Butler", link="https://www.youtube.com/watch?v=bvDcwPDjFr8"),
+                    MusicFile(title="Antarcticans Thawed", link="https://www.youtube.com/watch?v=RT4Q1EphGq8"),
+                    MusicFile(title="The Botanist", link="https://www.youtube.com/watch?v=8ZEDXcVxUOc"),
+                ]
+            )
+        ])
+    )
 
     artists.append( Artist(title="The Dark Prison Massacre",
         multi_albums=[
