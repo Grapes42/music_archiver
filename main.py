@@ -1,12 +1,25 @@
 import os
+import shelve
 import eyed3
 
-from map import return_artists
+from classes import *
 
 # yt dlp setup
 def download_from_youtube(title, link):
     cmd = f"yt-dlp --cookies-from-browser firefox -x --audio-quality 0 --audio-format mp3 \"{link}\" -o \"{title}\""
     os.system(cmd)
+
+def store_artist(artist):
+    shelve_file = shelve.open(f"artists/{artist.title}")
+    shelve_file["artist"] = artist
+    shelve_file.close()
+
+def retrieve_artist(artist_name):
+    shelve_file = shelve.open(f"artists/{artist_name}")
+    artist = shelve_file["artist"]
+    shelve_file.close()
+
+    return artist
 
 def add_metadata(path, title, artist, album, track=1):
     d3_file = eyed3.load(path)
@@ -25,75 +38,14 @@ def add_metadata(path, title, artist, album, track=1):
 
     d3_file.tag.save()
 
-
 # Main loop
-artists = return_artists()
+if not os.path.exists("artists"):
+    os.makedirs("artists")
 
-artist_count = len(artists)
+butcher_md = Artist(title="Butcher M.D.")
+butcher_md.add_file(title="Traces of Gore - Album", link="https://www.youtube.com/watch?v=fSCv6MswW8E")
 
-if input("Replace mode? (y/n): ").lower() == "y":
-    replace_mode = True
-else:
-    replace_mode = False
+store_artist(butcher_md)
 
-# Main loop
-for i in range(artist_count):
-
-    artist = artists[i]
-
-    print(f"\nDownloading {artist.title}, artist {i+1} of {artist_count}")
-    print("-"*5)
-
-    # Create folder for artist
-    if not os.path.exists(artist.title):
-        os.makedirs(artist.title)
-
-    # Download all single files
-    for file in artist.music_files:
-        file_title = f"{artist.title}/{file.title}"
-
-        # Skip download if not in replace 
-        # mode and file already exists
-        can_download = True
-
-        if not replace_mode:
-            if os.path.isfile(f"{file_title}.mp3"):
-                print("File already exists, skipping.")
-                can_download = False
-
-        if can_download:
-            download_from_youtube(title=file_title, link=file.link)
-
-        add_metadata(path=f"{file_title}.mp3", 
-                        title=file.title,
-                        artist=artist.title,
-                        album=file.title.replace(" - Album", ""))
-
-
-
-    # Download all multi albums
-    for multi_album in artist.multi_albums:
-        if not os.path.exists(f"{artist.title}/{multi_album.title}"):
-            os.makedirs(f"{artist.title}/{multi_album.title}")
-
-        track = 0
-
-        for file in multi_album.music_files:
-            track += 1
-            file_title = f"{artist.title}/{multi_album.title}/{track} - {file.title}"
-
-            can_download = True
-
-            if not replace_mode:
-                if os.path.isfile(f"{file_title}.mp3"):
-                    print("File already exists, skipping.")
-                    can_download = False
-
-            if can_download:
-                download_from_youtube(title=file_title, link=file.link)
-
-            add_metadata(path=f"{file_title}.mp3",
-                            title=file.title,
-                            artist=artist.title,
-                            album=multi_album.title.replace(" - Album", ""),
-                            track=track)
+butcher_md_2 = retrieve_artist("Butcher M.D.")
+print(butcher_md_2)

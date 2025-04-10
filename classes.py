@@ -9,7 +9,7 @@ class MusicFile():
             self.album = self.title
 
 class MultiAlbum():
-    def __init__(self, title, music_files):
+    def __init__(self, title, music_files=[]):
         self.title = title
         self.music_files = music_files
 
@@ -26,3 +26,6 @@ class Artist():
             string += f"Album: {file.album}\n"
             string += f"Link: {file.link}\n"
         return string
+    
+    def add_file(self, title, link):
+        self.music_files.append(MusicFile(title=title, link=link))
