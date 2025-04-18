@@ -34,6 +34,7 @@ albums = []
 tracks = []
 paths = []
 
+# Create images folder
 if not os.path.exists("images"):
     os.makedirs("images")
 
@@ -43,9 +44,9 @@ for map in maps:
 
     i = 0
 
+    # If line has no alphabet characters,
+    # remove it from the list
     while True:
-        # If line has no alphabet characters,
-        # remove it from the list
         if not content[i].upper().isupper():
             del content[i]
 
@@ -62,16 +63,19 @@ for map in maps:
     for i in range(len(content)):
         content[i] = content[i].replace("\n", "")
         
-    artist = content[0].split(",")[1]
+    artist = content[0].split("	")[1]
 
+    # Create image sub-folders
     image_path = f"images/{artist}"
     if not os.path.exists(image_path):
         os.makedirs(image_path)
     
     i = 1
 
+    # Extract information from map and
+    # add it to corrosponding lists
     while i < len(content):
-        title, link, album, track, path = content[i].split(",")
+        title, link, album, track, path = content[i].split("	")
 
         if album == "":
             album = title
@@ -88,6 +92,7 @@ for map in maps:
 
 download_count = 0
 
+# Check how many files don't exist
 for path in paths:
     if not os.path.exists(f"{path}.mp3"):
         download_count += 1
@@ -102,41 +107,47 @@ proceed = str(input("Proceed? (y/n): ")).lower()
 if proceed != "y":
     exit()
 
+# If no songs exist, default
+# to no replace
 if download_count == song_count:
     replace = "n"
+    replace_metadata = "n"
 else:
     replace = str(input("Replace existing files? (y/n): ")).lower()
 
+    if replace != "y":
+        replace_metadata = str(input("Replace metadata? (y/n): ")).lower()
+
+
 if replace != "y":
-    i = 0
-    while True:
+    for i in range(len(paths)):
+
         if os.path.exists(path=f"{paths[i]}.mp3"):
-            del titles[i]
-            del links[i]
-            del albums[i]
-            del tracks[i]
-            del paths[i]
-            del artists[i]
-        else:
-            i += 1
+            links[i] = ""
 
-        if i >= len(paths):
-            song_count = len(paths)
-            break
-
-    
 
 print("\n--- POWERED BY YT-DLP AND EYED3 ---")
 
-
-
 for i in range(song_count):
-    print(f"\nDownloading song {i+1}/{song_count}")
+    print(f"\nFile {i+1}/{song_count}, {titles[i]}:")
+    can_download = True
+    can_metadata = True
 
-    download_from_youtube(path=paths[i], link=links[i])
+    if not "http" in links[i]:
+        can_download = False
 
-    add_metadata(path=paths[i], 
-                 title=titles[i],
-                 artist=artists[i],
-                 album=albums[i],
-                 track=tracks[i])
+        if replace_metadata != "y":
+            can_metadata = False
+    
+    if can_download:
+        download_from_youtube(path=paths[i], link=links[i])
+
+    if can_metadata:
+        add_metadata(path=paths[i], 
+                    title=titles[i],
+                    artist=artists[i],
+                    album=albums[i],
+                    track=tracks[i])
+        
+    if not can_download and not can_metadata:
+        print("Passing...")
