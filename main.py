@@ -107,21 +107,33 @@ if download_count == song_count:
 else:
     replace = str(input("Replace existing files? (y/n): ")).lower()
 
+if replace != "y":
+    i = 0
+    while True:
+        if os.path.exists(path=f"{paths[i]}.mp3"):
+            del titles[i]
+            del links[i]
+            del albums[i]
+            del tracks[i]
+            del paths[i]
+            del artists[i]
+        else:
+            i += 1
+
+        if i >= len(paths):
+            song_count = len(paths)
+            break
+
+    
+
 print("\n--- POWERED BY YT-DLP AND EYED3 ---")
 
 
 
 for i in range(song_count):
     print(f"\nDownloading song {i+1}/{song_count}")
-    can_download = True
 
-    if replace != "y":
-        if os.path.exists(path=f"{paths[i]}.mp3"):
-            print("File already downloaded")
-            can_download = False
-
-    if can_download:
-        download_from_youtube(path=paths[i], link=links[i])
+    download_from_youtube(path=paths[i], link=links[i])
 
     add_metadata(path=paths[i], 
                  title=titles[i],
