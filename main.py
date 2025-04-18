@@ -34,6 +34,9 @@ albums = []
 tracks = []
 paths = []
 
+if not os.path.exists("images"):
+    os.makedirs("images")
+
 for map in maps:
     with open(f"maps/{map}", "r") as f:
         content = f.readlines()
@@ -60,6 +63,10 @@ for map in maps:
         content[i] = content[i].replace("\n", "")
         
     artist = content[0].split(",")[1]
+
+    image_path = f"images/{artist}"
+    if not os.path.exists(image_path):
+        os.makedirs(image_path)
     
     i = 1
 
@@ -67,11 +74,11 @@ for map in maps:
         title, link, album, track, path = content[i].split(",")
 
         if album == "":
-            album = title.replace(" - Album", "")
+            album = title
 
         titles.append(title)
         links.append(link)
-        albums.append(album)
+        albums.append(album.replace(" - Album", ""))
         tracks.append(track)
         paths.append(path)
 
@@ -85,26 +92,32 @@ for path in paths:
     if not os.path.exists(f"{path}.mp3"):
         download_count += 1
 
+song_count = len(titles)
+
 print(f"Number of Artists: {len(maps)}")
-print(f"Number of songs to download {download_count}/{len(titles)}")
+print(f"Number of songs to download {download_count}/{song_count}")
 
 proceed = str(input("Proceed? (y/n): ")).lower()
 
 if proceed != "y":
     exit()
 
-replace = str(input("Replace existing files? (y/n): ")).lower()
+if download_count == song_count:
+    replace = "n"
+else:
+    replace = str(input("Replace existing files? (y/n): ")).lower()
 
 print("\n--- POWERED BY YT-DLP AND EYED3 ---")
 
-song_count = len(titles)
+
 
 for i in range(song_count):
     print(f"\nDownloading song {i+1}/{song_count}")
     can_download = True
 
     if replace != "y":
-        if os.path.exists(path=paths[i]):
+        if os.path.exists(path=f"{paths[i]}.mp3"):
+            print("File already downloaded")
             can_download = False
 
     if can_download:
