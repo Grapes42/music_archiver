@@ -6,105 +6,112 @@ def download_from_youtube(path, link):
     cmd = f"yt-dlp --cookies-from-browser firefox -x --audio-quality 0 --audio-format mp3 \"{link}\" -o \"{path}\""
     os.system(cmd)
 
-def add_metadata(path, title, artist, album, track=1):
+def add_metadata(path, title, artist, album, track):
     d3_file = eyed3.load(f"{path}.mp3")
 
     d3_file.tag.title = title
     d3_file.tag.artist = artist
     d3_file.tag.album = album
     d3_file.tag.track_num = track
-    
-    try:
-        image_data = open(f"images/{artist}/{album}.jpg", "rb").read()
+
+    image_path = f"images/{artist}/{album}.jpg"
+
+    if os.path.exists(image_path):
+        image_data = open(image_path, "rb").read()
         d3_file.tag.images.set(3, image_data, "image/jpeg", u"Album Cover")
         print("Image for album found")
-    except:
+    else:
         print("No image for album found")
 
     d3_file.tag.save()
 
-# Create base folders
-if not os.path.exists("music"):
-        os.makedirs("music")
+maps = os.listdir("maps")
 
-if not os.path.exists("map"):
-        os.makedirs("map")
+artists = []
+titles = []
+links = []
+albums = []
+tracks = []
+paths = []
 
-if not os.path.exists("images"):
-        os.makedirs("images")
+for map in maps:
+    with open(f"maps/{map}", "r") as f:
+        content = f.readlines()
 
-map = os.listdir("map")
+    i = 0
 
-for artist_file in map:
+    while True:
+        # If line has no alphabet characters,
+        # remove it from the list
+        if not content[i].upper().isupper():
+            del content[i]
 
-    artist = artist_file.replace(".txt", "")
-    music_path = f"music/{artist}"
-    image_path = f"images/{artist}"
+        i += 1
 
-    # Create sub-folders
-    if not os.path.exists(music_path):
-        os.makedirs(music_path)
+        if i >= len(content):
+            break
 
-    if not os.path.exists(image_path):
-        os.makedirs(image_path)
+    del content[1] # Second line is just sheet 
+                   # headings; not required
+                    
 
-
-    # Read contents of artist file
-    with open(f"map/{artist_file}") as f:
-        contents = f.read()
-
-    items = contents.split("\n\n")
-
-    for item in items:
-        lines = item.split("\n")
-
-        pos = 0
-        path = f"music/{artist}"
-
-        album = ""
+    # Remove all newline characters
+    for i in range(len(content)):
+        content[i] = content[i].replace("\n", "")
         
-        if "," not in lines[0]:
-            album = lines[0].replace(":", "")
+    artist = content[0].split(",")[1]
+    
+    i = 1
 
-            album_folder = f"music/{artist}/{album}"
-
-            if not os.path.exists(album_folder):
-                os.makedirs(album_folder)
-
-            path = album_folder
-            pos += 1
+    while i < len(content):
+        title, link, album, track, path = content[i].split(",")
 
         if album == "":
-            while pos < len(lines):
-                title, link = lines[pos].split(", ")
-                
-                path = f"music/{artist}/{title}"
+            album = title.replace(" - Album", "")
 
-                download_from_youtube(path=path, link=link)
-                
-                add_metadata(path=path, 
-                             title=title,
-                             artist=artist,
-                             album=title.replace(" - Album", ""), 
-                             track=1)
-                
-                pos += 1
+        titles.append(title)
+        links.append(link)
+        albums.append(album)
+        tracks.append(track)
+        paths.append(path)
 
-        else:
-            while pos < len(lines):
-                title, link = lines[pos].split(", ")
+        artists.append(artist)
 
-                path = f"{album_folder}/{title}"
+        i += 1
 
-                download_from_youtube(path=path, link=link)
-                
-                add_metadata(path=path,
-                             title=title,
-                             artist=artist,
-                             album=album.replace(" - Album", ""),
-                             track=pos)
-                
-                pos += 1
+download_count = 0
 
+for path in paths:
+    if not os.path.exists(f"{path}.mp3"):
+        download_count += 1
 
-        
+print(f"Number of Artists: {len(maps)}")
+print(f"Number of songs to download {download_count}/{len(titles)}")
+
+proceed = str(input("Proceed? (y/n): ")).lower()
+
+if proceed != "y":
+    exit()
+
+replace = str(input("Replace existing files? (y/n): ")).lower()
+
+print("\n--- POWERED BY YT-DLP AND EYED3 ---")
+
+song_count = len(titles)
+
+for i in range(song_count):
+    print(f"\nDownloading song {i+1}/{song_count}")
+    can_download = True
+
+    if replace != "y":
+        if os.path.exists(path=paths[i]):
+            can_download = False
+
+    if can_download:
+        download_from_youtube(path=paths[i], link=links[i])
+
+    add_metadata(path=paths[i], 
+                 title=titles[i],
+                 artist=artists[i],
+                 album=albums[i],
+                 track=tracks[i])
